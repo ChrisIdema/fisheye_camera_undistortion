@@ -22,12 +22,10 @@ def correct(img_in, k, d, dims):
     img_out = cv2.remap(img_in, map1, map2, interpolation=cv2.INTER_LINEAR, borderMode=cv2.BORDER_CONSTANT)
     return img_out
 
-def correct_tan(src):
-    
-    h_angle = 120
-    w = 640
-    h = 480
-    v_angle = h_angle/640*480
+def correct_tan(src,h_angle):    
+    w = src.shape[1]
+    h = src.shape[0]
+    v_angle = h_angle/w*h
     s = (h,w,2)
 
     map1 = np.zeros(s,dtype=np.float32)
@@ -67,7 +65,7 @@ if __name__ == '__main__':
     img = correct(img, k=K, d=D, dims=(640,480))
     cv2.imwrite('undistorted.jpg', img)
     
-    img_tan = correct_tan(img)
+    img_tan = correct_tan(img,125)
     cv2.imwrite('linear.jpg', img_tan)
     
     cv2.imshow('', img)     
