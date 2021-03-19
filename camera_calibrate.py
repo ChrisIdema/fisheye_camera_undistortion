@@ -15,7 +15,8 @@ def calibrate(chessboard_path, show_chessboard=False):
     img_points = []     # 2d points in image plane.
 
     # Iterate through all images in the folder
-    image_list = os.listdir(chessboard_path)
+    dirs = os.listdir(chessboard_path)
+    image_list = [x for x in dirs if os.path.isfile(os.path.join(chessboard_path, x))]
     gray = None
     for image in image_list:
         img = cv2.imread(os.path.join(chessboard_path, image))
@@ -28,10 +29,12 @@ def calibrate(chessboard_path, show_chessboard=False):
             cv2.cornerSubPix(gray, corners, (3, 3), (-1, -1),
                              (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 30, 0.01))
             img_points.append(corners)
-            print('Image ' + image + ' is valid for calibration')
+            print('Image is valid for calibration:' + image )
             if show_chessboard:
                 cv2.drawChessboardCorners(img, CHESSBOARD_SIZE, corners, ret)
                 cv2.imwrite(os.path.join('./Chessboards_Corners', image), img)
+        else:
+            print('Image is NOT valid for calibration:' + image )
 
     k = np.zeros((3, 3))
     d = np.zeros((4, 1))
