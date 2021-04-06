@@ -75,6 +75,11 @@ def calc_tan_map(dims,h_angle):
     # return dst
 
 
+    
+
+def mkdir_always(path):
+    if not os.path.isdir(path):
+        os.mkdir(path)
 
 if __name__ == '__main__':
     Dims = tuple(np.load('./parameters/Dims.npy'))
@@ -87,56 +92,64 @@ if __name__ == '__main__':
     # new_arr = unfishmap1.reshape(-1, unfishmap1.shape[-1])
     # print(new_arr)
 
-    # np.savetxt("unfishmap1.csv", unfishmap1.reshape(-1, unfishmap1.shape[-1]), fmt='%d', delimiter=",",newline='\n')
 
-    with open('unfishmap1.csv', 'wb') as f:
-        np.savetxt(f, unfishmap1.reshape(-1, unfishmap1.shape[-1]), fmt='%d', delimiter=",",newline='\n')
+    # with open('unfishmap1.csv', 'wb') as f:
+    #     np.savetxt(f, unfishmap1.reshape(-1, unfishmap1.shape[-1]), fmt='%d', delimiter=",",newline='\n')
 
-    with open('unfishmap2.csv', 'wb') as f:
-        np.savetxt(f, unfishmap2, fmt='%d', delimiter=",",newline='\n')
-
-
-    with open('tanmap1.csv', 'wb') as f:
-        np.savetxt(f, tanmap1.reshape(-1, tanmap1.shape[-1]), fmt='%d', delimiter=",",newline='\n')
-
-    with open('tanmap2.csv', 'wb') as f:
-        np.savetxt(f, tanmap2, fmt='%d', delimiter=",",newline='\n')
-
-    # path = r'C:\Users\Chris\Documents\ee\git\hall_stills\wide'
-    # dirs = os.listdir(path)
-    # image_list = [x for x in dirs if os.path.isfile(os.path.join(path, x))]
-    # gray = None
-    # for image in image_list:
-    #     img = cv2.imread(os.path.join(path, image))
-    #     img = cv2.remap(img, unfishmap1, unfishmap2, interpolation=cv2.INTER_LINEAR, borderMode=cv2.BORDER_CONSTANT) 
-    #     cv2.imwrite(os.path.join(path,'corrected',image), img)
-    #     img = cv2.remap(img, tanmap1, tanmap2, interpolation=cv2.INTER_LINEAR, borderMode=cv2.BORDER_CONSTANT)   
-    #     cv2.imwrite(os.path.join(path,'linear',image), img)
+    # with open('unfishmap2.csv', 'wb') as f:
+    #     np.savetxt(f, unfishmap2, fmt='%d', delimiter=",",newline='\n')
 
 
-    # start = time.time() 
-    # img = cv2.remap(img, map1, map2, interpolation=cv2.INTER_LINEAR, borderMode=cv2.BORDER_CONSTANT)  
-    # end = time.time() 
-    # print("% s seconds" % (end-start)) 
+    # with open('tanmap1.csv', 'wb') as f:
+    #     np.savetxt(f, tanmap1.reshape(-1, tanmap1.shape[-1]), fmt='%d', delimiter=",",newline='\n')
 
-    # cv2.imwrite('undistorted.jpg', img)
+    # with open('tanmap2.csv', 'wb') as f:
+    #     np.savetxt(f, tanmap2, fmt='%d', delimiter=",",newline='\n')
+
+    path = r'C:\Users\Chris\Documents\ee\git\chess_world'
+
+    mkdir_always(os.path.join(path,'corrected'))
+    mkdir_always(os.path.join(path,'linear'))
+    dirs = os.listdir(path)
+    image_list = [x for x in dirs if os.path.isfile(os.path.join(path, x))]
+    gray = None
+    for image in image_list:
+        img = cv2.imread(os.path.join(path, image))
+        img = cv2.resize(img, Dims, interpolation=cv2.INTER_AREA)
+        img = cv2.remap(img, unfishmap1, unfishmap2, interpolation=cv2.INTER_LINEAR, borderMode=cv2.BORDER_CONSTANT) 
+        cv2.imwrite(os.path.join(path,'corrected',image), img)
+        img = cv2.remap(img, tanmap1, tanmap2, interpolation=cv2.INTER_LINEAR, borderMode=cv2.BORDER_CONSTANT)   
+        cv2.imwrite(os.path.join(path,'linear',image), img)
+
+
+    map1 = unfishmap1
+    map2 = unfishmap2
+    start = time.time() 
+    img = cv2.remap(img, map1, map2, interpolation=cv2.INTER_LINEAR, borderMode=cv2.BORDER_CONSTANT)  
+    end = time.time() 
+    print("% s seconds" % (end-start)) 
+
+    cv2.imwrite('undistorted.jpg', img)
     
     # map1,map2 = calc_tan_map(img,125)
 
-    # start = time.time() 
-    # img_tan = cv2.remap(img, map1, map2, interpolation=cv2.INTER_LINEAR, borderMode=cv2.BORDER_CONSTANT)   
-    # end = time.time() 
-    # print("% s seconds" % (end-start)) 
-    
-    
-    # cv2.imshow('', img)     
-    # cv2.waitKey(2000)
-    # cv2.imshow('', img_tan) 
-    # cv2.waitKey(2000)
+    map1 = tanmap1
+    map2 = tanmap2
 
-    # cv2.imwrite('undistorted.jpg', img)
-    # cv2.imwrite('linear.jpg', img_tan)
+    start = time.time() 
+    img_tan = cv2.remap(img, map1, map2, interpolation=cv2.INTER_LINEAR, borderMode=cv2.BORDER_CONSTANT)   
+    end = time.time() 
+    print("% s seconds" % (end-start)) 
     
-    # cv2.destroyAllWindows()
+    
+    cv2.imshow('', img)     
+    cv2.waitKey(2000)
+    cv2.imshow('', img_tan) 
+    cv2.waitKey(2000)
+
+    cv2.imwrite('undistorted.jpg', img)
+    cv2.imwrite('linear.jpg', img_tan)
+    
+    cv2.destroyAllWindows()
     
 
