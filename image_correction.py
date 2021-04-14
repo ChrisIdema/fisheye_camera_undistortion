@@ -9,9 +9,15 @@ def calc_unfish_map(k, d, dims):
     # # print(dim1)
     # assert dim1[0] / dim1[1] == dims[0] / dims[1], "Image to undistort needs to have same aspect ratio as the ones used in calibration"
     
+    
     nk = k.copy()
-    nk[0,0]=k[0,0]/2
-    nk[1,1]=k[1,1]/2
+   
+    # #enlarge image twice to get corner info
+    #nk[0,0]=k[0,0]/2
+    #nk[1,1]=k[1,1]/2
+    
+    nk[0,0]=k[0,0]/1.25
+    nk[1,1]=k[1,1]/1.25
     
     map1, map2 = cv2.fisheye.initUndistortRectifyMap(k, d, np.eye(3), nk, dims, cv2.CV_16SC2)
     
@@ -93,11 +99,11 @@ if __name__ == '__main__':
     # print(new_arr)
 
 
-    # with open('unfishmap1.csv', 'wb') as f:
-    #     np.savetxt(f, unfishmap1.reshape(-1, unfishmap1.shape[-1]), fmt='%d', delimiter=",",newline='\n')
+    with open('unfishmap1.csv', 'wb') as f:
+        np.savetxt(f, unfishmap1.reshape(-1, unfishmap1.shape[-1]), fmt='%d', delimiter=",",newline='\n')
 
-    # with open('unfishmap2.csv', 'wb') as f:
-    #     np.savetxt(f, unfishmap2, fmt='%d', delimiter=",",newline='\n')
+    with open('unfishmap2.csv', 'wb') as f:
+        np.savetxt(f, unfishmap2, fmt='%d', delimiter=",",newline='\n')
 
 
     # with open('tanmap1.csv', 'wb') as f:
@@ -106,7 +112,8 @@ if __name__ == '__main__':
     # with open('tanmap2.csv', 'wb') as f:
     #     np.savetxt(f, tanmap2, fmt='%d', delimiter=",",newline='\n')
 
-    path = r'C:\Users\Chris\Documents\ee\git\chess_world'
+    #path = r'C:\Users\Chris\Documents\ee\git\chess_world'
+    path = '/home/e2/e2/saracam/python/angle_screenshots'
 
     mkdir_always(os.path.join(path,'corrected'))
     mkdir_always(os.path.join(path,'linear'))

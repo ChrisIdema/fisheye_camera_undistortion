@@ -20,6 +20,7 @@ def calibrate(chessboard_path, show_chessboard=False):
     gray = None
     for image in image_list:
         img = cv2.imread(os.path.join(chessboard_path, image))
+        img = cv2.resize(img, (320,240), interpolation=cv2.INTER_AREA)
         gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
         ret, corners = cv2.findChessboardCorners(gray, CHESSBOARD_SIZE,
                                                  cv2.CALIB_CB_ADAPTIVE_THRESH + cv2.CALIB_CB_FAST_CHECK + cv2.CALIB_CB_NORMALIZE_IMAGE)
