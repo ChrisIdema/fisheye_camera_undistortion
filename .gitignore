@@ -130,3 +130,10 @@ dmypy.json
 
 # Pycharm
 /.idea/*
+
+*.jpg
+*.npy
+Chessboards
+Chessboards_corners
+*.zip
+.vscode/settings.json
